@@ -1,12 +1,13 @@
 FROM	debian:bookworm-slim
 RUN 	apt-get update
 RUN 	apt-get install curl -y
+RUN     apt-get install wget -y
 RUN	    apt-get install openssh-server -y 
 RUN 	echo 'alias ll="ls -l"' >> ~/.bashrc
-COPY	etc/resolv.conf /etc/resolv.conf
 
 #Add (your) ADM account
 RUN 	useradd -m -G root -s /bin/bash adm_dfinch2
+RUN 	echo 'alias ll="ls -l"' >> /home/adm_dfinch2/.bashrc
 
 #Change passwords
 RUN     echo "root:B1@ck83rry" | chpasswd
@@ -21,3 +22,5 @@ EXPOSE 22
 
 #RUN SSHD
 CMD ["/usr/sbin/sshd","-D"]
+
+COPY	etc/resolv.conf /etc/.
