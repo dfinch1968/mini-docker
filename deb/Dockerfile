@@ -2,7 +2,10 @@ FROM	debian:bookworm-slim
 RUN 	apt-get update
 RUN 	apt-get install curl -y
 RUN     apt-get install wget -y
-RUN	    apt-get install openssh-server -y 
+RUN     apt-get install apt-file -y
+RUN     apt-file update
+RUN	apt-get install iproute2 -y 
+RUN     apt-get install openssh-server -y 
 RUN 	echo 'alias ll="ls -l"' >> ~/.bashrc
 
 #Add (your) ADM account
