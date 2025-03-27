@@ -1,20 +1,15 @@
 FROM	debian:bookworm-slim
-RUN 	apt-get update
-RUN 	apt-get install curl -y
-RUN     apt-get install wget -y
-RUN     apt-get install apt-file -y
-RUN     apt-file update
-RUN	apt-get install iproute2 -y 
-RUN     apt-get install openssh-server -y 
-RUN 	echo 'alias ll="ls -l"' >> ~/.bashrc
+RUN 	apt-get update &&  
+ 		apt-get install -y curl \
+		apt-get install -y wget \
+		apt-get install -y apt-file \
+		apt-get install -y net-tools \
+		apt-get install -y iproute2 \
+		apt-get install -y openssh-server 
+ 
+RUN echo 'alias ll="ls -l"' >> ~/.bashrc
 
-#Add (your) ADM account
-RUN 	useradd -m -G root -s /bin/bash adm_dfinch2
-RUN 	echo 'alias ll="ls -l"' >> /home/adm_dfinch2/.bashrc
-
-#Change passwords
-RUN     echo "root:B1@ck83rry" | chpasswd
-RUN     echo "adm_dfinch2:B1@ck83rry" | chpasswd
+#CAT other/shell >>  ~/.bashrc
 
 #Config SSH if wanted 
 RUN 	mkdir -p /var/run/sshd
