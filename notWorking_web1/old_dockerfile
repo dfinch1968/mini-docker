@@ -1,0 +1,33 @@
+# Base Debian image
+FROM debian:stable-slim
+
+# Install Apache, SSL support, and network tools (netstat, ping)
+RUN apt-get update && \
+    apt-get install -y apache2 openssl net-tools iputils-ping && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Enable Apache modules for SSL and directory listing
+RUN a2enmod ssl && \
+    a2enmod autoindex && \
+    sed -i 's/Options Indexes FollowSymLinks/Options Indexes FollowSymLinks MultiViews/' /etc/apache2/apache2.conf
+
+# Set global ServerName directive
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+# Copy self-signed SSL certificate and key (must be in same folder as Dockerfile)
+COPY myweb.crt /etc/ssl/certs/myweb.crt
+COPY myweb.key /etc/ssl/private/myweb.key
+
+# Configure Apache default SSL site to use your certs
+RUN a2ensite default-ssl && \
+    sed -i 's|SSLCertificateFile.*|SSLCertificateFile /etc/ssl/certs/myweb.crt|' /etc/apache2/sites-available/default-ssl.conf && \
+    sed -i 's|SSLCertificateKeyFile.*|SSLCertificateKeyFile /etc/ssl/private/myweb.key|' /etc/apache2/sites-available/default-ssl.conf
+
+# Expose HTTP and HTTPS ports
+EXPOSE 80 443
+
+# Define persistent volume for serving directory listings
+VOLUME ["/var/www/html"]
+
+# Start Apache in foreground
+CMD ["apachectl", "-D", "FOREGROUND"]

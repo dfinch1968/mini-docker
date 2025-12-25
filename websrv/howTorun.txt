@@ -1,0 +1,12 @@
+# Build it
+docker build -t debweb .
+
+# Run it
+docker run -d --name web -p 80:80 -p 443:443 -e SERVER_NAME=localhost -v "/Volumes/Lacie/xxPersist/xxwww:/var/www/html:rw" debweb
+docker run -d --name web -p 80:80 -p 443:443 -v /Volumes/Lacie/xxPersist:/pv debweb
+
+# Connect to troubleshoot
+docker exec -it web /bin/bash
+
+# more troublshooting
+docker run -it --entrypoint /bin/bash p 80:80 -p 443:443 -v /Volumes/Lacie/xxPersist/xxwww:/var/www/html web
