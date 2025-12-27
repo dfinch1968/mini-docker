@@ -1,0 +1,20 @@
+create dockerfile for apache webserver running in directory list mode and must observe full dirtectory and symlinks, pv is /Volumes/Lacie/xxPersist/xxwww
+apache logs must also write to a pv located /Volumes/Lacie/xxPersist/apacheLogs, logs must be rotated daily with 7 day retention
+webserver will run on default port 80
+will not need docker-compose exmaple but need full disclouure of how to setup and deploy with docker build
+servername needs to be explicit in /etc/hostname to prevent llg warnings
+
+#expects 
+mkdir -p /Volumes/Lacie/xxPersist/xxwww
+mkdir -p /Volumes/Lacie/xxPersist/apacheLogs
+#so, run (if needed)
+sudo chmod -R 755 /Volumes/Lacie/xxPersist/xxwww
+sudo chmod -R 755 /Volumes/Lacie/xxPersist/apacheLogs
+
+# Build
+docker build -t apacheweb .
+
+# Run
+docker run -d --name apache-dirlist -p 80:80 -v /Volumes/Lacie/xxPersist/xxwww:/var/www/html -v /Volumes/Lacie/xxPersist/apacheLogs:/var/log/apache2 apacheweb
+
+
