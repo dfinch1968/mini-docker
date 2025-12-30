@@ -1,0 +1,16 @@
+/var/log/mysql/*.log {
+    daily
+    rotate 7
+    missingok
+    notifempty
+    compress
+    delaycompress
+    create 640 mysql mysql
+    sharedscripts
+    postrotate
+        # Tell MariaDB to reopen logs, ignore failure if pid file missing
+        if [ -f /var/run/mariadb/mariadb.pid ]; then
+            kill -HUP "$(cat /var/run/mariadb/mariadb.pid)" 2>/dev/null || true
+        fi
+    endscript
+}

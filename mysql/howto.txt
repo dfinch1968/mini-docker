@@ -1,0 +1,29 @@
+create dockerfile for fedora OS with mariadb.
+pv storage for mysql data at /Volumes/Lacie/xxPersist/mysql-data
+pv for mysql logs at /Volumes/Lacie/xxPersist/mysql-logs and will rotate daily for ma 7 days and include cron entry.
+Root will be used to create schema and db user darren will be created with admin grants to all
+mysql will allow connections from local network
+Mysql index will be innodb and pool or buffer size will need be low as running on Personal Computer will be 512M.
+create database speed and user darren will have full access.
+do not put any passwords in configuration scripts and indicate how to change root and darren db accounts manually once db is up
+specify configuration to how we can make inserts from bash shell script without showing password using .my.cnf on client.
+
+
+#run and build
+docker build -t mariafedora .
+
+# from 
+docker run -d \
+  --name mydb \
+  -p 3306:3306 \
+  -v /Volumes/Lacie/xxPersist/mysql-data:/var/lib/mysql \
+  -v /Volumes/Lacie/xxPersist/mysql-logs:/var/log/mysql \
+  mariadb
+
+# to
+docker run -d \
+  --name mydb \
+  -p 3306:3306 \
+  mariadb-data \
+  mariadb-logs \
+mariafedora

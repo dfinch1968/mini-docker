@@ -1,0 +1,22 @@
+generate dockerfile for postgres on mac with minimal security.  
+Data and log storage must be split and written to a PV located at /Volumes/Lacie/xxPersist/.  
+Logs will be rotated every 7 days and disgarded after 7.
+
+# Required 
+mkdir -p /Volumes/Lacie/xxPersist/pgdata
+mkdir -p /Volumes/Lacie/xxPersist/pglog
+
+
+# Build
+docker build -t pgminimal .
+
+# Run
+docker run -d \
+  --name pgdb \
+  -e POSTGRES_USER=admin \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=appdb \
+  -p 5432:5432 \
+  -v /Volumes/Lacie/xxPersist/pgdata:/var/lib/postgresql/data \
+  -v /Volumes/Lacie/xxPersist/pglog:/var/log/postgresql \
+  pgminimal
